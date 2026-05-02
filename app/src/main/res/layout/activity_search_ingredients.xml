@@ -5,16 +5,38 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <TextView
-        android:id="@+id/titleBar"
+    <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:background="@color/coral_pink"
-        android:gravity="center"
-        android:text="Поиск по продуктам"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#FF6B6B"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Назад"
+            android:tint="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Поиск по продуктам"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+
+        <View android:layout_width="40dp" android:layout_height="40dp" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="0dp"
@@ -22,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBar">
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <LinearLayout
             android:id="@+id/ingredientsContainer"
@@ -38,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="16dp"
-        android:background="@drawable/custom_button"
+        android:background="#FF6B6B"
         android:text="Найти рецепты"
         android:textColor="#FFFFFF"
         android:textSize="18sp"

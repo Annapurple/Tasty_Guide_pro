@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import ru.samsung.tasty_guide_test.R;
-import ru.samsung.tasty_guide_test.adapters.RecipeAdapter;
 import ru.samsung.tasty_guide_test.models.Recipe;
 import ru.samsung.tasty_guide_test.utils.DatabaseHelper;
 import java.util.ArrayList;
@@ -19,8 +17,9 @@ import java.util.List;
 public class SearchByIngredientsActivity extends AppCompatActivity {
     private LinearLayout ingredientsContainer;
     private Button btnSearch;
+    private ImageButton btnBack;
     private DatabaseHelper dbHelper;
-    private String[] allIngredients = {"курица", "паста", "бекон", "яйца", "сыр", "салат", "помидоры", "огурцы", "оливки", "хлеб"};
+    private String[] allIngredients = {"курица", "паста", "бекон", "яйца", "сыр", "салат", "помидоры", "огурцы", "оливки", "хлеб", "масло", "лук", "морковь", "картофель"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +29,9 @@ public class SearchByIngredientsActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         ingredientsContainer = findViewById(R.id.ingredientsContainer);
         btnSearch = findViewById(R.id.btnSearch);
+        btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(v -> finish());
 
         // Создаем чекбоксы для каждого продукта
         for (String ingredient : allIngredients) {
@@ -60,11 +62,15 @@ public class SearchByIngredientsActivity extends AppCompatActivity {
             return;
         }
 
+        // Поиск рецептов
         List<Recipe> foundRecipes = dbHelper.searchRecipesByIngredients(selectedIngredients);
 
-        if (foundRecipes.isEmpty()) {
-            Toast.makeText(this, "Рецепты не найдены", Toast.LENGTH_SHORT).show();
+        if (foundRecipes == null || foundRecipes.isEmpty()) {
+            Toast.makeText(this, "Рецепты не найдены", Toast.LENGTH_LONG).show();
         } else {
+            Toast.makeText(this, "Найдено рецептов: " + foundRecipes.size(), Toast.LENGTH_SHORT).show();
+
+            // Передаем результаты в SearchResultsActivity
             Intent intent = new Intent(this, SearchResultsActivity.class);
             intent.putExtra("results", new ArrayList<>(foundRecipes));
             startActivity(intent);

@@ -6,16 +6,38 @@
     android:background="#FFFFFF"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/titleBar"
+    <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:background="@color/coral_pink"
-        android:gravity="center"
-        android:text="Добавить рецепт"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="#FF6B6B"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Назад"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Добавить рецепт"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+
+        <View android:layout_width="40dp" android:layout_height="40dp" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="0dp"
@@ -23,13 +45,32 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBar">
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
+
+            <Button
+                android:id="@+id/btnSelectImage"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Выбрать фото"
+                android:background="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"/>
+
+            <ImageView
+                android:id="@+id/imagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:background="#F0F0F0"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_marginBottom="16dp"/>
 
             <EditText
                 android:id="@+id/editTitle"
@@ -38,7 +79,9 @@
                 android:background="@drawable/custom_input"
                 android:hint="Название рецепта"
                 android:padding="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext" />
 
             <EditText
                 android:id="@+id/editDescription"
@@ -47,7 +90,9 @@
                 android:background="@drawable/custom_input"
                 android:hint="Краткое описание"
                 android:padding="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext" />
 
             <EditText
                 android:id="@+id/editIngredients"
@@ -57,7 +102,9 @@
                 android:hint="Ингредиенты (через запятую)"
                 android:padding="12dp"
                 android:layout_marginBottom="16dp"
-                android:minLines="3" />
+                android:minLines="3"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext" />
 
             <EditText
                 android:id="@+id/editInstructions"
@@ -66,14 +113,25 @@
                 android:background="@drawable/custom_input"
                 android:hint="Приготовление (пошагово)"
                 android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:minLines="5"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone" />
+
+            <CheckBox
+                android:id="@+id/checkAnonymous"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Добавить анонимно (без указания автора)"
+                android:textSize="14sp"
                 android:layout_marginBottom="24dp"
-                android:minLines="5" />
+                android:padding="8dp"/>
 
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@drawable/custom_button"
+                android:background="#FF6B6B"
                 android:text="Сохранить рецепт"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
