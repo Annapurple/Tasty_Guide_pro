@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private Button btnAddRecipe, btnLogout, btnSignIn, btnSignUp, btnSearchByIngredients;
     private SearchView searchView;
+    private int currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
         prefs = getSharedPreferences("RecipeApp", MODE_PRIVATE);
+        currentUserId = prefs.getInt("userId", -1);
 
         initViews();
         setupListeners();
@@ -51,20 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recipeList = new ArrayList<>();
-        originalRecipeList = new ArrayList();
+        originalRecipeList = new ArrayList<>();
 
-        // Настройка SearchView
         searchView.setQueryHint("Поиск рецептов...");
-        searchView.setIconifiedByDefault(false);
     }
 
     private void setupListeners() {
-        // Поиск по названию рецепта
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 filterRecipesByTitle(query);
-                searchView.clearFocus(); // убираем фокус с поиска
+                searchView.clearFocus();
                 return true;
             }
 
@@ -75,13 +75,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Кнопка поиска по продуктам
         btnSearchByIngredients.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SearchByIngredientsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, SearchByIngredientsActivity.class));
         });
 
-        // Кнопка добавления рецепта
         btnAddRecipe.setOnClickListener(v -> {
             if (isLoggedIn()) {
                 startActivity(new Intent(MainActivity.this, AddRecipeActivity.class));
@@ -90,29 +87,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Кнопка выхода
         btnLogout.setOnClickListener(v -> {
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();
             editor.apply();
+            currentUserId = -1;
             updateAuthButtons();
             loadRecipes();
             Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
         });
 
-        // Кнопка входа
         btnSignIn.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, SignInActivity.class));
         });
 
-        // Кнопка регистрации
         btnSignUp.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, SignUpActivity.class));
         });
     }
 
     private boolean isLoggedIn() {
-        return prefs.getInt("userId", -1) != -1;
+        return currentUserId != -1;
     }
 
     private void updateAuthButtons() {
@@ -134,26 +129,52 @@ public class MainActivity extends AppCompatActivity {
         recipeList.clear();
         recipeList.addAll(originalRecipeList);
 
-        adapter = new RecipeAdapter(recipeList, recipe -> {
-            Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
-            intent.putExtra("recipe_title", recipe.getTitle());
-            intent.putExtra("recipe_description", recipe.getDescription());
-            intent.putExtra("recipe_ingredients", recipe.getIngredients());
-            intent.putExtra("recipe_instructions", recipe.getInstructions());
-            intent.putExtra("recipe_author", recipe.getUserName());
-            intent.putExtra("recipe_image", recipe.getImage());
-            startActivity(intent);
-        });
+        adapter = new RecipeAdapter(recipeList,
+                recipe -> {
+                    Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
+                    intent.putExtra("recipe_title", recipe.getTitle());
+                    intent.putExtra("recipe_description", recipe.getDescription());
+                    intent.putExtra("recipe_ingredients", recipe.getIngredients());
+                    intent.putExtra("recipe_instructions", recipe.getInstructions());
+                    intent.putExtra("recipe_author", recipe.getUserName());
+                    intent.putExtra("recipe_image", recipe.getImage());
+                    startActivity(intent);
+                },
+                position -> showDeleteConfirmationDialog(position),
+                currentUserId
+        );
         recyclerView.setAdapter(adapter);
+    }
+
+    private void showDeleteConfirmationDialog(int position) {
+        Recipe recipe = recipeList.get(position);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Удаление рецепта")
+                .setMessage("Вы уверены, что хотите удалить рецепт \"" + recipe.getTitle() + "\"?")
+                .setPositiveButton("Удалить", (dialog, which) -> deleteRecipe(position))
+                .setNegativeButton("Отмена", null)
+                .show();
+    }
+
+    private void deleteRecipe(int position) {
+        Recipe recipe = recipeList.get(position);
+
+        if (dbHelper.deleteRecipe(recipe.getId(), currentUserId)) {
+            recipeList.remove(position);
+            originalRecipeList.remove(recipe);
+            adapter.notifyItemRemoved(position);
+            Toast.makeText(this, "Рецепт удален", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Ошибка при удалении", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void filterRecipesByTitle(String query) {
         if (query == null || query.isEmpty()) {
-            // Если строка поиска пустая, показываем все рецепты
             recipeList.clear();
             recipeList.addAll(originalRecipeList);
         } else {
-            // Фильтруем рецепты по названию
             List<Recipe> filtered = new ArrayList<>();
             for (Recipe recipe : originalRecipeList) {
                 if (recipe.getTitle().toLowerCase().contains(query.toLowerCase())) {
@@ -163,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             recipeList.clear();
             recipeList.addAll(filtered);
 
-            // Показываем сообщение, если ничего не найдено
             if (filtered.isEmpty()) {
                 Toast.makeText(this, "Рецепты не найдены", Toast.LENGTH_SHORT).show();
             }
@@ -174,9 +194,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        currentUserId = prefs.getInt("userId", -1);
         updateAuthButtons();
         loadRecipes();
-        // Очищаем поиск при возврате на главную
         searchView.setQuery("", false);
         searchView.clearFocus();
     }

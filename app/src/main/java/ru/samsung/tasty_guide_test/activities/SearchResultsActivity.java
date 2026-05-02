@@ -1,6 +1,7 @@
 package ru.samsung.tasty_guide_test.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,6 +19,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     private TextView titleText;
     private ImageButton btnBack;
     private List<Recipe> recipeList;
+    private SharedPreferences prefs;
+    private int currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +31,11 @@ public class SearchResultsActivity extends AppCompatActivity {
         titleText = findViewById(R.id.titleText);
         btnBack = findViewById(R.id.btnBack);
 
-        // Кнопка назад на главную
-        btnBack.setOnClickListener(v -> {
-            finish(); // Возврат на главную
-        });
+        prefs = getSharedPreferences("RecipeApp", MODE_PRIVATE);
+        currentUserId = prefs.getInt("userId", -1);
 
-        // Получаем результаты
+        btnBack.setOnClickListener(v -> finish());
+
         recipeList = (List<Recipe>) getIntent().getSerializableExtra("results");
 
         if (recipeList == null) {
@@ -44,16 +46,22 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        RecipeAdapter adapter = new RecipeAdapter(recipeList, recipe -> {
-            Intent intent = new Intent(SearchResultsActivity.this, RecipeDetailActivity.class);
-            intent.putExtra("recipe_title", recipe.getTitle());
-            intent.putExtra("recipe_description", recipe.getDescription());
-            intent.putExtra("recipe_ingredients", recipe.getIngredients());
-            intent.putExtra("recipe_instructions", recipe.getInstructions());
-            intent.putExtra("recipe_author", recipe.getUserName());
-            intent.putExtra("recipe_image", recipe.getImage());
-            startActivity(intent);
-        });
+        RecipeAdapter adapter = new RecipeAdapter(recipeList,
+                recipe -> {
+                    Intent intent = new Intent(SearchResultsActivity.this, RecipeDetailActivity.class);
+                    intent.putExtra("recipe_title", recipe.getTitle());
+                    intent.putExtra("recipe_description", recipe.getDescription());
+                    intent.putExtra("recipe_ingredients", recipe.getIngredients());
+                    intent.putExtra("recipe_instructions", recipe.getInstructions());
+                    intent.putExtra("recipe_author", recipe.getUserName());
+                    intent.putExtra("recipe_image", recipe.getImage());
+                    startActivity(intent);
+                },
+                position -> {
+                    // В результатах поиска удаление не используем
+                },
+                currentUserId
+        );
 
         recyclerView.setAdapter(adapter);
     }

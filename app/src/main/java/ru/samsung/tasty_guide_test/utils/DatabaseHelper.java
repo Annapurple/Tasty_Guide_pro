@@ -167,4 +167,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return filtered;
     }
+    public boolean deleteRecipe(int recipeId, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Удаляем только если рецепт принадлежит пользователю
+        int result = db.delete("recipes", "id=? AND user_id=?",
+                new String[]{String.valueOf(recipeId), String.valueOf(userId)});
+        db.close();
+        return result > 0;
+    }
+
+    public boolean isRecipeOwner(int recipeId, int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query("recipes", null, "id=? AND user_id=?",
+                new String[]{String.valueOf(recipeId), String.valueOf(userId)},
+                null, null, null);
+        boolean isOwner = cursor != null && cursor.getCount() > 0;
+        if (cursor != null) cursor.close();
+        db.close();
+        return isOwner;
+    }
 }
