@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Tasty Guide</string>
+    <string name="tasty_guide">Tasty Guide</string>
+    <string name="sign_up_txt">Регистрация</string>
+    <string name="sign_up_btn">Зарегистрироваться</string>
+    <string name="sign_in">Вход</string>
+    <string name="email">Email</string>
+    <string name="name">Имя</string>
+    <string name="password">Пароль</string>
+    <string name="alr_have_account">Уже есть аккаунт? Войти</string>
+    <string name="dont_have_account">Нет аккаунта? Зарегистрироваться</string>
+</resources>
