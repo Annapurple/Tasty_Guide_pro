@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "recipe_app.db";
-    private static final int DATABASE_VERSION = 2; // Обновляем версию
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,22 +46,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void addSampleRecipes(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
-        values.put("title", "Паста Карбонара");
-        values.put("description", "Классическая итальянская паста");
-        values.put("ingredients", "паста, бекон, яйца, сыр пармезан, черный перец");
-        values.put("instructions", "1. Сварите пасту\n2. Обжарьте бекон\n3. Смешайте яйца с сыром\n4. Соедините все");
-        values.put("user_id", 0);
-        values.put("author_name", "Аноним");
-        db.insert("recipes", null, values);
 
         values = new ContentValues();
-        values.put("title", "Цезарь с курицей");
-        values.put("description", "Свежий салат с курицей");
-        values.put("ingredients", "курица, салат, сухарики, сыр пармезан, соус цезарь");
-        values.put("instructions", "1. Обжарьте курицу\n2. Нарежьте салат\n3. Смешайте все с соусом");
+        values.put("title", "Салат Оливье");
+        values.put("description", "Классический новогодний салат");
+        values.put("ingredients", "картофель,морковь,яйца,колбаса,огурцы,горошек,майонез,соль,перец,зелень");
+        values.put("instructions", "1. Отварите картофель, морковь и яйца до готовности\n2. Нарежьте вареные овощи, яйца и колбасу мелкими кубиками\n3. Добавьте консервированный горошек\n4. Посолите, поперчите по вкусу\n5. Заправьте майонезом и тщательно перемешайте\n6. Украсьте свежей зеленью перед подачей");
         values.put("user_id", 0);
-        values.put("author_name", "Аноним");
+        values.put("author_name", "Шеф-повар");
         db.insert("recipes", null, values);
+
+        values.put("title", "Паста Карбонара");
+        values.put("description", "Классическая итальянская паста с беконом и яйцом в сливочном соусе");
+        values.put("ingredients", "паста,бекон,яйца,сливки,сыр,чеснок,перец черный,соль");
+        values.put("instructions", "1. Отварите пасту в подсоленной воде\n2. Нарежьте бекон, обжарьте его на сухой сковороде до хруста\n3. В миске смешайте яйца, сливки, тертый сыр, измельченный чеснок, соль и перец\n4. Слейте воду с пасты, оставив немного воды для соуса\n5. Смешайте горячую пасту с беконом, залейте яично-сливочной смесью и быстро перемешайте\n6. Подавайте сразу, посыпав сыром и черным перцем");
+        values.put("user_id", 0);
+        values.put("author_name", "Шеф-повар");
+        db.insert("recipes", null, values);
+
+        values.put("title", "Салат Цезарь с курицей");
+        values.put("description", "Знаменитый салат с хрустящей курицей, сухариками и соусом Цезарь");
+        values.put("ingredients", "курица,салат,хлеб,сыр,яйца,помидоры,чеснок,масло,лимон,соль,перец");
+        values.put("instructions", "1. Куриное филе посолите, поперчите и обжарьте на сковороде до золотистой корочки, затем нарежьте полосками\n2. Для сухариков: нарежьте хлеб кубиками, обжарьте с измельченным чесноком на оливковом масле\n3. Для соуса: смешайте желтки, горчицу, сок лимона, измельченный чеснок, тертый сыр и оливковое масло\n4. Листья салата порвите руками на крупные куски\n5. Смешайте салат с курицей, сухариками и соусом\n6. Посыпьте тертым пармезаном и подавайте сразу");
+        values.put("user_id", 0);
+        values.put("author_name", "Шеф-повар");
+        db.insert("recipes", null, values);
+
+        values.put("title", "Фруктовый салат с медовой заправкой");
+        values.put("description", "Легкий и яркий салат из свежих фруктов с ароматной медово-цитрусовой заправкой. Готовится за 15 минут!");
+        values.put("ingredients", "клубника,банан,киви,йогурт,мед,лимон,орехи");
+        values.put("instructions", "1. Клубнику вымойте и нарежьте четвертинками, банан и киви очистите и нарежьте кубиками\n" +
+                "2. Все фрукты сложите в глубокую миску\n" +
+                "3. Для заправки смешайте йогурт, мед и свежевыжатый сок лимона. Тщательно перемешайте до однородности\n" +
+                "4. Залейте фрукты заправкой и аккуратно перемешайте\n" +
+                "5. Грецкие орехи слегка обжарьте на сухой сковороде (2 минуты) и измельчите\n" +
+                "6. Посыпьте салат орехами\n" +
+                "7. Подавайте сразу после приготовления, пока фрукты не пустили сок");
+        values.put("user_id", 0);
+        values.put("author_name", "Шеф-повар");
+        db.insert("recipes", null, values);
+
+
+        values.put("title", "Йогуртово-клубничный десерт в шоколаде");
+        values.put("description", "Нежный и полезный десерт из йогурта с клубникой в шоколадной глазури");
+        values.put("ingredients", "йогурт,клубника,шоколад");
+        values.put("instructions", "1. Клубнику вымойте и нарежьте мелкими кусочками\n2. Смешайте нарезанную клубнику с йогуртом в однородную массу\n3. Выложите смесь в формочки для льда или на противень, застеленный пергаментом, формируя небольшие кружочки\n4. Поставьте в морозилку на 3-4 часа до полного застывания\n5. Растопите шоколад на водяной бане или в микроволновой волне\n6. Достаньте замороженные десерты, обмакните каждый в растопленный шоколад\n7. Снова поставьте в морозилку на 30 минут до застывания шоколада\n8. Храните в морозилке, подавайте охлажденными");
+        values.put("user_id", 0);
+        values.put("author_name", "Шеф-повар");
+        db.insert("recipes", null, values);
+
     }
 
     @Override
@@ -151,25 +184,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipes;
     }
 
-    public List<Recipe> searchRecipesByIngredients(List<String> ingredients) {
+    public List<Recipe> searchRecipesByIngredients(List<String> userIngredients) {
         List<Recipe> allRecipes = getAllRecipes();
         List<Recipe> filtered = new ArrayList<>();
 
         for (Recipe recipe : allRecipes) {
-            String recipeIngredients = recipe.getIngredients().toLowerCase();
-            for (String ingredient : ingredients) {
-                if (recipeIngredients.contains(ingredient.toLowerCase())) {
-                    filtered.add(recipe);
-                    break; // Добавляем рецепт только один раз
+            String[] recipeIngredientsArray = recipe.getIngredients().toLowerCase().split(",");
+            List<String> recipeIngredientsList = new ArrayList<>();
+            for (String ing : recipeIngredientsArray) {
+                recipeIngredientsList.add(ing.trim());
+            }
+
+            int matchedCount = 0;
+            for (String userIng : userIngredients) {
+                if (recipeIngredientsList.contains(userIng.toLowerCase().trim())) {
+                    matchedCount++;
                 }
             }
-        }
 
+            double requiredPercent = 0.5;
+            boolean hasEnough = matchedCount >= recipeIngredientsList.size() * requiredPercent;
+
+            if (hasEnough) {
+                filtered.add(recipe);
+            }
+        }
         return filtered;
     }
     public boolean deleteRecipe(int recipeId, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Удаляем только если рецепт принадлежит пользователю
         int result = db.delete("recipes", "id=? AND user_id=?",
                 new String[]{String.valueOf(recipeId), String.valueOf(userId)});
         db.close();

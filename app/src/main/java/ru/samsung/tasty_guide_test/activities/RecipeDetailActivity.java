@@ -37,7 +37,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         titleText.setText(title);
         authorText.setText("Автор: " + author);
         descriptionText.setText(description);
-        ingredientsText.setText(ingredients.replace(",", "\n• "));
+
+        // Форматирование ингредиентов - точка перед КАЖДЫМ ингредиентом
+        String formattedIngredients = formatIngredients(ingredients);
+        ingredientsText.setText(formattedIngredients);
+
         instructionsText.setText(instructions);
 
         // Отображение фото - если есть, показываем, иначе скрываем
@@ -50,5 +54,26 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
 
         btnBack.setOnClickListener(v -> finish());
+    }
+
+    private String formatIngredients(String ingredients) {
+        if (ingredients == null || ingredients.isEmpty()) {
+            return "";
+        }
+
+        String[] ingredientsArray = ingredients.split(",");
+        StringBuilder formattedIngredients = new StringBuilder();
+
+        for (int i = 0; i < ingredientsArray.length; i++) {
+            String ingredient = ingredientsArray[i].trim();
+            if (!ingredient.isEmpty()) {
+                formattedIngredients.append("• ").append(ingredient);
+                if (i < ingredientsArray.length - 1) {
+                    formattedIngredients.append("\n");
+                }
+            }
+        }
+
+        return formattedIngredients.toString();
     }
 }
