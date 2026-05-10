@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Результаты поиска"
-            android:textSize="34sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"/>
 

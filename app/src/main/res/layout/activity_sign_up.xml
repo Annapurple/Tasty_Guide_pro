@@ -15,6 +15,7 @@
         android:background="@color/coral_pink"
         android:gravity="center"
         android:text="@string/tasty_guide"
+        android:textColor="@color/white"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
